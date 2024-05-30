@@ -6,19 +6,28 @@
 
 // Composables
 import { createRouter, createWebHistory } from "vue-router/auto";
+import Default from "@/layouts/Default.vue";
+import Landing from "@/views/Landing.vue";
+import Login from "@/views/Login.vue";
 
 const routes = [
   {
     path: "/",
-    component: () => import("@/layouts/default.vue"),
+    component: Default,
     children: [
       {
-        path: "",
-        name: "landing",
-        component: () => import("@/components/landing.vue"),
-        props: true,
+        path: "landing",
+        component: Landing,
+      },
+      {
+        path: "login",
+        component: Login,
       },
     ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/",
   },
 ];
 

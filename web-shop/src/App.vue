@@ -1,13 +1,13 @@
 <template>
   <v-app>
     <v-main>
-      <router-view class="white-background"/>
+      <Default class="white-background"/>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
-  //
+  import Default from "@/layouts/Default.vue"
 </script>
 
 <style scoped>

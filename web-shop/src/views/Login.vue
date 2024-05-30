@@ -1,6 +1,6 @@
 <template>
-    <v-form v-model="valid">
-      <v-container>
+  <v-form v-model="valid">
+    <v-container>
         <v-row>
           <v-col
             cols="12"
@@ -43,10 +43,13 @@
             ></v-text-field>
           </v-col>
         </v-row>
-      </v-container>
-    </v-form>
-  </template>
+    </v-container>
+  </v-form>
+</template>
+
 <script>
+import { ref } from 'vue';
+
     const title = ref('Login');
 
     export default {
