@@ -17,7 +17,8 @@ function toggleSideMenu() {
               <v-app-bar-nav-icon @click="toggleSideMenu"></v-app-bar-nav-icon>
           </template>
 
-          <v-app-bar-title>Web-shop</v-app-bar-title>
+          <!-- <v-app-bar-title></v-app-bar-title> -->
+          <v-btn text to="/">Web-shop</v-btn>
 
           <v-spacer></v-spacer>
 
@@ -31,7 +32,7 @@ function toggleSideMenu() {
           <v-list-item prepend-icon="mdi-forum" title="Users" value="users"></v-list-item>
       </v-navigation-drawer>
 
-      <RouterView />
+      <RouterView/>
 
       <v-footer class="footer">© {{ currentYear }} Web-shop project. All rights reserved.</v-footer>
   </v-app>
@@ -39,8 +40,9 @@ function toggleSideMenu() {
 
 <style scoped>
 .register-button {
-    color: #FFC107;
+  color: #FFC107;
 }
+
 .footer {
   height: 50px;
   width: 100%;
