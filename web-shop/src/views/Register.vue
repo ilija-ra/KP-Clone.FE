@@ -47,13 +47,7 @@
 
       const router = useRouter();
   
-      const submit = async () => {
-        // await fetch('http://localhost:8000/api/auth/register', {
-        //   method: 'POST',
-        //   headers: {'Content-Type': 'application/json'},
-        //   body: JSON.stringify(data)
-        // });
-        
+      const submit = async () => {       
         axios.post('http://localhost:8080/api/auth/register', data)
           .then(response => {
             console.log('Success:', response);

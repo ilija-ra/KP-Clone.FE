@@ -1,16 +1,22 @@
 <template>
-  <NavBar/>
+  <!-- <v-app> -->
+    <NavBar/>
 
-  <main class="form-signin">
-    <router-view/>
-  </main>
+    <main class="form-signin">
+      <router-view/>
+    </main>
+
+    <!-- <Footer/> -->
+  <!-- </v-app> -->
+  
 </template>
 
 <script>
   import NavBar from "@/components/NavBar.vue";
+  import Footer from "@/components/Footer.vue";
 
   export default {
-    components: {NavBar}
+    components: {NavBar, Footer}
   }
 </script>
 
