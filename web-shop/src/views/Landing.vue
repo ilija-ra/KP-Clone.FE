@@ -1,8 +1,25 @@
 <template>
   <div class="container">
+    <v-row>
+      <v-col cols="4">
+        <v-text-field v-model="search" @keyup.enter="searchProducts" label="Search by name and description..." prepend-icon="$vuetify"></v-text-field>
+      </v-col>
+      <v-col cols="2">
+        <v-text-field v-model="minPrice" @keyup.enter="searchProducts" label="From price"></v-text-field>
+      </v-col>
+      <v-col cols="2">
+        <v-text-field v-model="maxPrice" @keyup.enter="searchProducts" label="To price"></v-text-field>
+      </v-col>
+      <v-col cols="2">
+        <v-select v-model="selectedSaleType" @update:model-value="searchProducts" clearable label="Filter by sale type" :items="['FIXED_PRICE', 'AUCTION']"></v-select>
+      </v-col>
+      <v-col cols="2">
+        <v-select v-model="selectedCategoryName" @update:model-value="searchProducts" clearable label="Filter by category" :items=categoryNames></v-select>
+      </v-col>
+    </v-row>
     <v-data-table
       :headers="headers"
-      :items="plants"
+      :items="products"
       density="compact"
       item-key="id"
       class="bottom-right">
@@ -29,19 +46,23 @@ export default {
   setup() {
     // const message = ref('You are not logged in!');
     // const store = useStore();
-    const plants = ref([]);
+    const products = ref([]);
+    const categories = ref([]);
+    const categoryNames = ref([]);
     const selectedProductId = ref(null);;
-    const search = ref('');
+    const search = ref(null);
     const minPrice = ref(null);
     const maxPrice = ref(null);
     const selectedSaleType = ref(null);
-    const selectedCategory = ref(null);
+    const selectedCategoryName = ref(null);
 
     onMounted(() => {
-      fetchPlants();
+      searchProducts();
+      fetchCategories();
+      // fetchProducts();
       // fetchUser();
     });
-
+    
     // const fetchUser = async () => {
     //   try {
     //     const response = await axiosInstance.get('users/get-current-user', { withCredentials: true });
@@ -52,12 +73,39 @@ export default {
     //   }
     // }
 
-    const fetchPlants = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products');
-        plants.value = response.data.items;
+        const response = await axiosInstance.get('/products');
+        products.value = response.data.items;
       } catch (error) {
-        // console.error('Error fetching plants:', error);
+        // console.error('Error fetching products:', error);
+      }
+    };
+
+    const searchProducts = async () => {
+      try {
+        const payload = {
+          searchCriteria: search.value,
+          fromPrice: minPrice.value,
+          toPrice: maxPrice.value,
+          saleType: selectedSaleType.value,
+          categoryId: selectedCategoryName.value == null ? null : categories.value.filter(x => x.name == selectedCategoryName.value)[0].id
+        };
+
+        const response = await axiosInstance.post('products/search', payload);
+        products.value = response.data.items;
+      } catch (error) {
+        // console.error('Error fetching products:', error);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosInstance.get('/categories');
+        categories.value = response.data.items;
+        categoryNames.value = categories.value.map(x => x.name);
+      } catch (error) {
+        // console.error('Error fetching products:', error);
       }
     };
 
@@ -88,10 +136,18 @@ export default {
     return {
       // message,
       headers,
-      plants,
+      products,
       selectedProductId,
       showDetails,
-      onProductDetailsClosed
+      searchProducts,
+      onProductDetailsClosed,
+      search,
+      minPrice,
+      maxPrice,
+      selectedSaleType,
+      selectedCategoryName,
+      categories,
+      categoryNames
     };
   }
 };

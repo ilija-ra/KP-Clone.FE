@@ -3,7 +3,10 @@
     <NavBar/>
 
     <!-- <main class="form-signin"> -->
-      <router-view/>
+      <!-- <v-main>
+        <router-view/>
+      </v-main> -->
+     
     <!-- </main> -->
 
     <!-- <Footer/> -->

@@ -2,9 +2,7 @@
   <v-app>
     <v-navigation-drawer v-model="isSideMenuShown" app>
       <v-list>
-        <v-list-item prepend-icon="mdi-view-dashboard" title="Products" @click="navigateTo('products')"></v-list-item>
-        <v-list-item prepend-icon="mdi-view-dashboard" title="Categories" @click="navigateTo('categories')"></v-list-item>
-        <v-list-item prepend-icon="mdi-view-dashboard" title="Users" @click="navigateTo('users')"></v-list-item>
+        <v-list-item prepend-icon="mdi-view-dashboard" title="Landing" @click="navigateTo('')"></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
