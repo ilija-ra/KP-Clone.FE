@@ -1,13 +1,13 @@
 <template>
-  <!-- <v-app> -->
+  <v-app>
     <NavBar/>
 
-    <main class="form-signin">
+    <!-- <main class="form-signin"> -->
       <router-view/>
-    </main>
+    <!-- </main> -->
 
     <!-- <Footer/> -->
-  <!-- </v-app> -->
+  </v-app>
   
 </template>
 
