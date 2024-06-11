@@ -8,7 +8,6 @@
         <v-data-table
             :headers="headers"
             :items="reviews"
-            density="compact"
             item-key="id"
             class="bottom-right">
             <template v-slot:item.action="{ item }">

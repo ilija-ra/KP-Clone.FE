@@ -3,6 +3,7 @@ import Landing from "@/views/Landing.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Reviews from "@/views/Reviews.vue";
+import Reports from "@/views/Reports.vue";
 
 // const router = createRouter({
 //   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,11 @@ const router = createRouter({
     {
       path: "/reviews",
       component: Reviews,
+      meta: { requiresAuth: true, roles: ["ADMINISTRATOR"] },
+    },
+    {
+      path: "/reports",
+      component: Reports,
       meta: { requiresAuth: true, roles: ["ADMINISTRATOR"] },
     },
   ],

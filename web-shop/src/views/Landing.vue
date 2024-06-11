@@ -25,7 +25,6 @@
     <v-data-table
       :headers="headers"
       :items="products"
-      density="compact"
       item-key="id"
       class="bottom-right">
       <template v-slot:item.action="{ item }">
