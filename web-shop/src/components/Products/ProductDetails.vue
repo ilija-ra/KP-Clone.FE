@@ -68,7 +68,7 @@
     setup(props, { emit }) {
       const dialog = ref(false);
       const product = ref(null);
-  
+
       // Emit event when the dialog is closed
       const onClosed = () => {
         emit('closed');

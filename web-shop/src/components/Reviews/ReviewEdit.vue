@@ -6,8 +6,10 @@
           <v-form ref="form">
             <v-text-field v-model="editedReview.rate" label="Rate" outlined type="number" :rules="rateRules"></v-text-field>
             <v-textarea v-model="editedReview.comment" label="Comment" outlined rows="3" max-rows="6" :rules="commentRules"></v-textarea>
-            <v-text-field v-model="editedReview.reviewedId" label="Reviewed Id" outlined type="number" :rules="reviewedIdRules"></v-text-field>
-            <v-text-field v-model="editedReview.reviewerId" label="Reviewer Id" outlined type="number" :rules="reviewerIdRules"></v-text-field>
+            <!-- <v-text-field v-model="editedReview.reviewedId" label="Reviewed Id" outlined type="number" :rules="reviewedIdRules"></v-text-field> -->
+            <!-- <v-text-field v-model="editedReview.reviewerId" label="Reviewer Id" outlined type="number" :rules="reviewerIdRules"></v-text-field> -->
+            <v-select v-model="selectedReviewed" clearable label="Select reviewed" :items=userFullNames :rules="reviewedIdRules"></v-select>
+            <v-select v-model="selectedReviewer" clearable label="Select reviewer" :items=userFullNames :rules="reviewerIdRules"></v-select>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -20,7 +22,7 @@
   </template>
   
   <script>
-  import { ref, watch } from 'vue';
+  import { ref, watch, onMounted } from 'vue';
   import axiosInstance from '@/interceptors/axiosInterceptor.js';
   
   export default {
@@ -32,6 +34,10 @@
       }
     },
     setup(props, { emit }) {
+      const users = ref([]);
+      const userFullNames = ref([]);
+      const selectedReviewed = ref(null);
+      const selectedReviewer = ref(null);
       const dialog = ref(false);
       const editedReview = ref({
         id: null,
@@ -56,23 +62,41 @@
       ];
       const reviewedIdRules = [
         (v) => !!v || 'Reviewed Id is required',
-        (v) => v > 0 || 'Reviewed Id must be greater than 0'
+        () => selectedReviewer.value !== selectedReviewed.value || 'Reviewer and reviewed user must be different'
       ];
       const reviewerIdRules = [
         (v) => !!v || 'Reviewer Id is required',
-        (v) => v > 0 || 'Reviewer Id must be greater than 0'
+        () => selectedReviewer.value !== selectedReviewed.value || 'Reviewer and reviewed user must be different'
       ];
+
+      onMounted(() => {
+        fetchUsers();
+      });
 
       const fetchReviewDetails = async (id) => {
         try {
           const response = await axiosInstance.get(`/reviews/${Number(id)}`);
           Object.assign(editedReview.value, response.data);
+
+          selectedReviewed.value = response.data.reviewedName;
+          selectedReviewer.value = response.data.reviewerName;
+
           dialog.value = true;
         } catch (error) {
           console.error('Error fetching review details:', error);
         }
       };
   
+      const fetchUsers = async () => {
+        try {
+          const response = await axiosInstance.get(`/users/options`);
+          users.value = response.data.items;
+          userFullNames.value = users.value.map(x => x.fullName);
+        } catch (error) {
+          console.error('Error fetching product details:', error);
+        }
+      };
+
       watch(() => props.reviewId, (newId) => {
         if (newId) {
           fetchReviewDetails(newId);
@@ -89,8 +113,8 @@
             id: editedReview.value.id,
             rate: editedReview.value.rate,
             comment: editedReview.value.comment,
-            reviewedId: editedReview.value.reviewedId,
-            reviewerId: editedReview.value.reviewerId
+            reviewedId: selectedReviewed.value == null ? null : users.value.filter(x => x.fullName == selectedReviewed.value)[0].id,
+            reviewerId: selectedReviewer.value == null ? null : users.value.filter(x => x.fullName == selectedReviewer.value)[0].id
           }
 
           const response = await axiosInstance.put(`/reviews`, payload);
@@ -110,7 +134,11 @@
         reviewedIdRules,
         reviewerIdRules,
         onClosed,
-        saveChanges
+        saveChanges,
+        users,
+        userFullNames,
+        selectedReviewed,
+        selectedReviewer
       };
     }
   };
