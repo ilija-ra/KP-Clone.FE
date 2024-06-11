@@ -1,45 +1,45 @@
 <template>
     <v-dialog v-model="dialog" max-width="500px" @closed="onClosed">
-      <v-card v-if="product">
+      <v-card v-if="review">
         <v-card-title>
-          Details of <span class="headline">{{ product.name }}</span>
+          Review details of <span class="headline">{{ review.reviewerName }}</span>
         </v-card-title>
         <v-card-text>
-          <v-img :src="product.image" class="mb-3" height="200px"></v-img>
           <v-list dense>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title>ID: {{ product.id }}</v-list-item-title>
+                <v-list-item-title>Id:</v-list-item-title>
+                    <v-list-item-subtitle v-html="review.id"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-list-item>
                 <v-list-item-content>
-                    <v-list-item-title>Name:</v-list-item-title>
-                    <v-list-item-subtitle v-html="product.name"></v-list-item-subtitle>
+                    <v-list-item-title>Rate:</v-list-item-title>
+                    <v-list-item-subtitle v-html="review.rate"></v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
             <v-list-item>
                 <v-list-item-content>
-                    <v-list-item-title>Description:</v-list-item-title>
-                    <v-list-item-subtitle v-html="product.description"></v-list-item-subtitle>
+                    <v-list-item-title>Comment:</v-list-item-title>
+                    <v-list-item-subtitle v-html="review.comment"></v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title>Category:</v-list-item-title>
-                <v-list-item-subtitle v-html="product.categoryName"></v-list-item-subtitle>
+                <v-list-item-title>Date of review:</v-list-item-title>
+                <v-list-item-subtitle v-html="review.reviewDate"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-list-item>
                 <v-list-item-content>
-                    <v-list-item-title>Price:</v-list-item-title>
-                    <v-list-item-subtitle v-html="product.price"></v-list-item-subtitle>
+                    <v-list-item-title>Reviewed user:</v-list-item-title>
+                    <v-list-item-subtitle v-html="review.reviewedName"></v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
             <v-list-item>
                 <v-list-item-content>
-                    <v-list-item-title>Sale type:</v-list-item-title>
-                    <v-list-item-subtitle v-html="product.saleType"></v-list-item-subtitle>
+                    <v-list-item-title>Reviewer:</v-list-item-title>
+                    <v-list-item-subtitle v-html="review.reviewerName"></v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -58,41 +58,41 @@
   import axiosInstance from '@/interceptors/axiosInterceptor.js'
   
   export default {
-    name: 'ProductDetails',
+    name: 'ReviewDetails',
     props: {
-      productId: {
+        reviewId: {
         type: Number,
         required: true
       }
     },
     setup(props, { emit }) {
       const dialog = ref(false);
-      const product = ref(null);
-
+      const review = ref(null);
+  
       // Emit event when the dialog is closed
       const onClosed = () => {
         emit('closed');
       };
 
-      const fetchProductDetails = async (id) => {
+      const fetchReviewDetails = async (id) => {
         try {
-          const response = await axiosInstance.get(`/products/${Number(id)}`);
-          product.value = response.data;
+          const response = await axiosInstance.get(`/reviews/${Number(id)}`);
+          review.value = response.data;
           dialog.value = true;
         } catch (error) {
-          console.error('Error fetching product details:', error);
+          console.error('Error fetching review details:', error);
         }
       };
   
-      watch(() => props.productId, (newId) => {
+      watch(() => props.reviewId, (newId) => {
         if (newId) {
-          fetchProductDetails(newId);
+          fetchReviewDetails(newId);
         }
       });
   
       return {
         dialog,
-        product,
+        review,
         onClosed
       };
     }

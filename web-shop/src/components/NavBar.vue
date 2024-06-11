@@ -3,6 +3,7 @@
     <v-navigation-drawer v-model="isSideMenuShown" app>
       <v-list>
         <v-list-item prepend-icon="mdi-view-dashboard" title="Landing" @click="navigateTo('')"></v-list-item>
+        <v-list-item v-if="role === 'ADMINISTRATOR'" prepend-icon="mdi-view-dashboard" title="Reviews" @click="navigateTo('reviews')"></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -41,6 +42,8 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const auth = computed(() => store.state.authenticated);
+    const role = computed(() => store.state.role);
+    console.log("role", role);
     const isSideMenuShown = ref(false);
 
     const toggleSideMenu = () => {
@@ -52,14 +55,16 @@ export default defineComponent({
       isSideMenuShown.value = false; // Close drawer after navigation
     };
 
-    const logout = () => {
-      store.dispatch('setAuth', false);
+    const logout = async () => {
+      await store.dispatch('setAuth', false);
+      await store.dispatch('setRole', null);
       isSideMenuShown.value = false;
       router.push('/login');
     };
 
     return {
       auth,
+      role,
       isSideMenuShown,
       toggleSideMenu,
       navigateTo,

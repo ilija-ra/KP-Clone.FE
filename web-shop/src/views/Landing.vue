@@ -1,6 +1,11 @@
 <template>
   <div class="container">
     <v-row>
+      <v-col cols="12">
+        <h1>PRODUCTS</h1>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="4">
         <v-text-field v-model="search" @keyup.enter="searchProducts" label="Search by name and description..." prepend-icon="$vuetify"></v-text-field>
       </v-col>
@@ -59,19 +64,7 @@ export default {
     onMounted(() => {
       searchProducts();
       fetchCategories();
-      // fetchProducts();
-      // fetchUser();
     });
-    
-    // const fetchUser = async () => {
-    //   try {
-    //     const response = await axiosInstance.get('users/get-current-user', { withCredentials: true });
-    //     message.value = `Hi! ${response.data.firstName}`;
-    //     await store.dispatch('setAuth', true);
-    //   } catch (error) {
-    //     await store.dispatch('setAuth', false);
-    //   }
-    // }
 
     const fetchProducts = async () => {
       try {
@@ -128,8 +121,6 @@ export default {
     };
 
     const onProductDetailsClosed = () => {
-      // Define behavior when ProductDetails component is closed
-      // For example, reset any state related to ProductDetails
       selectedProductId.value = null;
     };
 
