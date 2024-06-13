@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Reviews from "@/views/Reviews.vue";
 import Reports from "@/views/Reports.vue";
+import Profile from "@/views/Profile.vue";
 
 // const router = createRouter({
 //   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +31,11 @@ const router = createRouter({
       path: "/reports",
       component: Reports,
       meta: { requiresAuth: true, roles: ["ADMINISTRATOR"] },
+    },
+    {
+      path: "/profile",
+      component: Profile,
+      meta: { requiresAuth: true, roles: ["SELLER", "BUYER"] },
     },
   ],
 });

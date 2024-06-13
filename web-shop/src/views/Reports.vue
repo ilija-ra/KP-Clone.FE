@@ -31,8 +31,8 @@
   export default {
     name: "Reviews",
     components: {
-    ReportAccept,
-    ReportDecline
+      ReportAccept,
+      ReportDecline
     },
     setup() {
       const reports = ref([]);
