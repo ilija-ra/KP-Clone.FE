@@ -6,6 +6,7 @@
         <v-list-item v-if="role === 'ADMINISTRATOR'" prepend-icon="mdi-view-dashboard" title="Reviews" @click="navigateTo('reviews')"></v-list-item>
         <v-list-item v-if="role === 'ADMINISTRATOR'" prepend-icon="mdi-view-dashboard" title="Reports" @click="navigateTo('reports')"></v-list-item>
         <v-list-item v-if="role === 'SELLER' || role === 'BUYER'" prepend-icon="mdi-view-dashboard" title="Profile" @click="navigateTo('profile')"></v-list-item>
+        <v-list-item v-if="role === 'SELLER' || role === 'BUYER' || role === 'ADMINISTRATOR'" prepend-icon="mdi-view-dashboard" title="Other users" @click="navigateTo('users')"></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
