@@ -12,6 +12,7 @@
 import { reactive } from 'vue';
 import { useRouter } from "vue-router";
 import axios from 'axios';
+import axiosInstance from '@/interceptors/axiosInterceptor.js'
 import { useStore } from "vuex";
 
 export default {
@@ -27,11 +28,29 @@ export default {
     const submit = async () => {
       try {
         const response = await axios.post('http://localhost:8080/api/auth/login', data, { withCredentials: true });
-        document.cookie = `jwt=${response.data.token}`;
+        const token = response.data.token;
+        document.cookie = `jwt=${token}`;
+
+        const user = await fetchUser();
+
         await store.dispatch('setAuth', true);
+        await store.dispatch('setRole', user.roles[0]);
+        await store.dispatch('setUserId', user.id);
         router.push('/');
       } catch (error) {
         console.error('Error:', error.response?.data?.errors || error.message);
+      }
+    };
+
+    const fetchUser = async () => {
+      try {
+        const response = await axiosInstance.get('users/get-current-user', { withCredentials: true });
+        return response.data;
+      } catch (error) {
+        await store.dispatch('setAuth', false);
+        await store.dispatch('setRole', null);
+        await store.dispatch('setUserId', null);
+        throw error;
       }
     };
 

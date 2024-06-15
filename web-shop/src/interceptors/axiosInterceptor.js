@@ -6,7 +6,6 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Add a request interceptor to set the Authorization header
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get("jwt");

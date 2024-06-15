@@ -1,0 +1,2 @@
+auth: - https://www.youtube.com/watch?v=ULFAgn2ITko&ab_channel=ScalableScripts
+        https://github.com/scalablescripts/vue-auth
