@@ -29,23 +29,31 @@
       class="bottom-right">
       <template v-slot:item.action="{ item }">
         <v-icon @click="showDetails(item.id)">mdi-information-outline</v-icon>
+        <v-icon v-if="auth && role === 'BUYER'" @click="buy(item.id, item.saleType)">mdi-cart-outline</v-icon>
       </template>
     </v-data-table>
-    <ProductDetails :productId="selectedProductId" @closed="onProductDetailsClosed" />
+    <ProductDetails v-if="detailsModalOpen" :productId="selectedProductId" @closed="onProductDetailsClosed" />
+    <ProductAuction v-if="auctionBuyModalOpen" :productId="selectedProductId" @closed="onAuctionBuyProductClosed" @auctionBuy="searchProducts"/>
+    <ProductFixedPrice v-if="fixedPriceBuyModalOpen" :productId="selectedProductId" @closed="onFixedPriceBuyProductClosed" @fixedPriceBuy="searchProducts" />
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
+import { useStore } from 'vuex';
 import axiosInstance from '@/interceptors/axiosInterceptor.js'
 import ProductDetails from '@/components/Products/ProductDetails.vue';
+import ProductFixedPrice from '@/components/Products/ProductFixedPrice.vue';
+import ProductAuction from '@/components/Products/ProductAuction.vue';
 // import { useStore } from "vuex";
 
 export default {
   name: "Landing",
   components: {
-    ProductDetails
+    ProductDetails,
+    ProductFixedPrice,
+    ProductAuction
   },
   setup() {
     // const message = ref('You are not logged in!');
@@ -59,6 +67,13 @@ export default {
     const maxPrice = ref(null);
     const selectedSaleType = ref(null);
     const selectedCategoryName = ref(null);
+    const store = useStore();
+    const auth = computed(() => store.state.authenticated);
+    const role = computed(() => store.state.role);
+    let detailsModalOpen = ref(false);
+    let fixedPriceBuyModalOpen = ref(false);
+    let auctionBuyModalOpen = ref(false);
+    
 
     onMounted(() => {
       searchProducts();
@@ -112,23 +127,72 @@ export default {
     ];
 
     const showDetails = (id) => {
+        if (selectedProductId.value === id) {
+          selectedProductId.value = null;
+        } else {
+          selectedProductId.value = id;
+          detailsModalOpen.value = true;
+          fixedPriceBuyModalOpen.value = false;
+          auctionBuyModalOpen.value = false;
+        }
+      };
+
+    const buy = (id, saleType) => {
+      if (saleType === 'FIXED_PRICE') {
+        fixedPriceBuy(id);
+      } else {
+        auctionBuy(id);
+      }
+    };
+
+    const fixedPriceBuy = (id) => {
       if (selectedProductId.value === id) {
         selectedProductId.value = null;
       } else {
         selectedProductId.value = id;
+        fixedPriceBuyModalOpen.value = true;
+        auctionBuyModalOpen.value = false;
+        detailsModalOpen.value = false;
+      }
+    };
+
+    const auctionBuy = (id) => {
+      if (selectedProductId.value === id) {
+        selectedProductId.value = null;
+      } else {
+        selectedProductId.value = id;
+        auctionBuyModalOpen.value = true;
+        fixedPriceBuyModalOpen.value = false;
+        detailsModalOpen.value = false;
       }
     };
 
     const onProductDetailsClosed = () => {
       selectedProductId.value = null;
+      detailsModalOpen.value = false;
+    };
+
+    const onFixedPriceBuyProductClosed = () => {
+      selectedProductId.value = null;
+      fixedPriceBuyModalOpen.value = false;
+    };
+
+    const onAuctionBuyProductClosed = () => {
+      selectedProductId.value = null;
+      auctionBuyModalOpen.value = false;
     };
 
     return {
-      // message,
+      auth,
+      role,
       headers,
       products,
       selectedProductId,
       showDetails,
+      detailsModalOpen,
+      auctionBuyModalOpen,
+      fixedPriceBuyModalOpen,
+      buy,
       searchProducts,
       onProductDetailsClosed,
       search,
@@ -137,7 +201,9 @@ export default {
       selectedSaleType,
       selectedCategoryName,
       categories,
-      categoryNames
+      categoryNames,
+      onFixedPriceBuyProductClosed,
+      onAuctionBuyProductClosed
     };
   }
 };
