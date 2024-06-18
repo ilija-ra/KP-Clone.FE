@@ -36,6 +36,8 @@ export default {
         await store.dispatch('setAuth', true);
         await store.dispatch('setRole', user.roles[0]);
         await store.dispatch('setUserId', user.id);
+        await store.dispatch('setFullName', `${user.firstName} ${user.lastName}`);
+        await store.dispatch('setInitials', `${user.firstName[0]}${user.lastName[0]}`);
         router.push('/');
       } catch (error) {
         console.error('Error:', error.response?.data?.errors || error.message);
@@ -50,6 +52,8 @@ export default {
         await store.dispatch('setAuth', false);
         await store.dispatch('setRole', null);
         await store.dispatch('setUserId', null);
+        await store.dispatch('setFullName', null);
+        await store.dispatch('setInitials', null);
         throw error;
       }
     };

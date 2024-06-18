@@ -6,6 +6,8 @@ const store = createStore({
       authenticated: false,
       role: null,
       userId: null,
+      fullName: null,
+      initials: null,
     };
   },
   mutations: {
@@ -15,6 +17,12 @@ const store = createStore({
     },
     SET_USER_ID: (state, userId) => {
       state.userId = userId;
+    },
+    SET_FULL_NAME: (state, fullName) => {
+      state.fullName = fullName;
+    },
+    SET_INITIALS: (state, initials) => {
+      state.initials = initials;
     },
   },
   actions: {
@@ -26,6 +34,12 @@ const store = createStore({
     },
     setUserId: ({ commit }, userId) => {
       commit("SET_USER_ID", userId);
+    },
+    setFullName: ({ commit }, fullName) => {
+      commit("SET_FULL_NAME", fullName);
+    },
+    setInitials: ({ commit }, initials) => {
+      commit("SET_INITIALS", initials);
     },
   },
 });

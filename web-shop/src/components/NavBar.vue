@@ -27,7 +27,9 @@
         <v-btn text to="/register">Register</v-btn>
       </div>
 
-      <div v-else>
+      <div v-else class="d-flex align-center">
+        <v-avatar color="#FF4786">{{ initials }}</v-avatar>
+        <v-btn>Hello, {{ fullName }}!</v-btn>
         <v-btn text @click="logout">Log out</v-btn>
       </div>
     </v-app-bar>
@@ -37,6 +39,7 @@
     </v-main>
   </v-app>
 </template>
+
 
 <script lang="ts">
 import { ref, computed } from 'vue';
@@ -50,6 +53,8 @@ export default defineComponent({
     const router = useRouter();
     const auth = computed(() => store.state.authenticated);
     const role = computed(() => store.state.role);
+    const fullName = computed(() => store.state.fullName);
+    const initials = computed(() => store.state.initials);
     const isSideMenuShown = ref(false);
 
     const toggleSideMenu = () => {
@@ -57,21 +62,25 @@ export default defineComponent({
     };
 
     const navigateTo = (route: string) => {
+      isSideMenuShown.value = false;
       router.push(`/${route}`);
-      isSideMenuShown.value = false; // Close drawer after navigation
     };
 
     const logout = async () => {
+      isSideMenuShown.value = false;
       await store.dispatch('setAuth', false);
       await store.dispatch('setRole', null);
       await store.dispatch('setUserId', null);
-      isSideMenuShown.value = false;
+      await store.dispatch('setFullName', null);
+      await store.dispatch('setInitials', null);
       router.push('/login');
     };
 
     return {
       auth,
       role,
+      fullName,
+      initials,
       isSideMenuShown,
       toggleSideMenu,
       navigateTo,
@@ -81,12 +90,17 @@ export default defineComponent({
 });
 </script>
 
+
 <style>
-/* Add any custom styles if needed */
 .navbar-brand {
   display: flex;
   align-items: center;
   text-decoration: none;
   color: white;
+}
+
+.d-flex.align-center {
+  display: flex;
+  align-items: center;
 }
 </style>
