@@ -7,10 +7,13 @@
         <v-list-item v-if="role === 'ADMINISTRATOR'" prepend-icon="mdi-view-dashboard" title="Reports" @click="navigateTo('reports')"></v-list-item>
         <v-list-item v-if="role === 'SELLER' || role === 'BUYER'" prepend-icon="mdi-view-dashboard" title="Profile" @click="navigateTo('profile')"></v-list-item>
         <v-list-item v-if="role === 'SELLER' || role === 'BUYER' || role === 'ADMINISTRATOR'" prepend-icon="mdi-view-dashboard" title="Other users" @click="navigateTo('users')"></v-list-item>
+        <v-list-item v-if="role === 'SELLER' || role === 'BUYER'" prepend-icon="mdi-view-dashboard" title="My reviews" @click="navigateTo('my-reviews')"></v-list-item>
+        <v-list-item v-if="role === 'SELLER' || role === 'BUYER'" prepend-icon="mdi-view-dashboard" title="Reviews about me" @click="navigateTo('reviews-about-me')"></v-list-item>
+        <v-list-item v-if="role === 'SELLER' || role === 'BUYER'" prepend-icon="mdi-view-dashboard" title="Report" @click="navigateTo('create-report')"></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="#3F51B5" dark>
       <v-app-bar-nav-icon @click="toggleSideMenu"></v-app-bar-nav-icon>
       <v-toolbar-title>
         <router-link to="/" class="navbar-brand">Home</router-link>

@@ -62,8 +62,8 @@
             </v-list-item>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title>Is Blocked:</v-list-item-title>
-                <v-list-item-subtitle v-html="user.isBlocked ? 'Yes' : 'No'"></v-list-item-subtitle>
+                <v-list-item-title>Rating:</v-list-item-title>
+                <v-list-item-subtitle v-html="user.averageRating"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -88,7 +88,7 @@
        </v-data-table>
        <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+          <v-btn color="#3F51B5" text @click="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
