@@ -99,7 +99,7 @@ export default {
           categoryId: selectedCategoryName.value == null ? null : categories.value.filter(x => x.name == selectedCategoryName.value)[0].id
         };
 
-        const response = await axiosInstance.post('products/search', payload);
+        const response = await axios.post('http://localhost:8080/api/products/search', payload);
         products.value = response.data.items;
       } catch (error) {
         // console.error('Error fetching products:', error);
@@ -108,7 +108,7 @@ export default {
 
     const fetchCategories = async () => {
       try {
-        const response = await axiosInstance.get('/categories');
+        const response = await axios.get('http://localhost:8080/api/categories');
         categories.value = response.data.items;
         categoryNames.value = categories.value.map(x => x.name);
       } catch (error) {
@@ -123,6 +123,8 @@ export default {
       { text: 'Price', align: 'start', value: 'price' },
       { text: 'Sale Type', align: 'start', value: 'saleType' },
       { text: 'Publish Date', align: 'start', value: 'publishDate' },
+      { text: 'Seller Name', align: 'start', value: 'sellerName' },
+      { text: 'Seller Rate', align: 'start', value: 'sellerRate' },
       { text: 'Action', align: 'start', value: 'action' }
     ];
 
