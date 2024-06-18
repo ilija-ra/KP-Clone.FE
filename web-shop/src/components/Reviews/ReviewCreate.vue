@@ -11,7 +11,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="#3F51B5" text @click="dialog = false">Cancel</v-btn>
+        <v-btn color="#3F51B5" text @click="onClosed">Cancel</v-btn>
         <v-btn color="#3F51B5" text @click="saveChanges">Save</v-btn>
       </v-card-actions>
     </v-card>
@@ -31,6 +31,7 @@
       const initialProfile = ref(null);
       const store = useStore();
       const userId = computed(() => store.state.userId);
+      const role = computed(() => store.state.role);
       const userFullNames = ref([]);
       const selectedReviewed = ref(null);
       const review = ref({
@@ -54,17 +55,24 @@
       ];
   
       onMounted(() => {
-        fetchSellers();
+        fetchUsers();
       });
   
-      const fetchSellers = async () => {
+      const fetchUsers = async () => {
         try {
-          const response = await axiosInstance.get(`/users/options/sellers`);
+          let userRoles = '';
+          if (role.value === 'BUYER') {
+            userRoles = 'sellers';
+          } else if (role.value === 'SELLER') {
+            userRoles = 'buyers';
+          }
+
+          const response = await axiosInstance.get(`/users/options/${userRoles}`);
           users.value = response.data.items.filter(x => x.id != userId.value);
           userFullNames.value = users.value.map(x => x.fullName);
           dialog.value = true;
         } catch (error) {
-          console.error('Error fetching product details:', error);
+          console.error('Error fetching users:', error);
         }
       };
 
@@ -76,15 +84,22 @@
             comment: review.value.comment,
             reviewedId: selectedReviewed.value == null ? null : users.value.filter(x => x.fullName == selectedReviewed.value)[0].id,
             reviewerId: userId.value
+          };
+
+          let userRole;
+
+          if (role.value === 'BUYER') {
+            userRole = 'seller';
+          } else if (role.value === 'SELLER') {
+            userRole = 'buyer';
           }
 
-          const response = await axiosInstance.post(`/reviews/create-for-seller`, payload);
+          const response = await axiosInstance.post(`/reviews/create-for-${userRole}`, payload);
 
           if (response.status === 201) {
             console.log('Review saved successfully');
             emit('saved');
             dialog.value = false;
-            // Optionally, you can add further logic here, such as resetting the form or providing user feedback
           } else {
             console.error('Error saving review:', response.statusText);
           }
@@ -94,6 +109,7 @@
       };
 
       const onClosed = () => {
+        dialog.value = false
         emit('closed');
       };
   

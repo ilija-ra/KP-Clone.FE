@@ -88,7 +88,7 @@
        </v-data-table>
        <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#3F51B5" text @click="dialog = false">Close</v-btn>
+          <v-btn color="#3F51B5" text @click="onClosed">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -121,6 +121,7 @@
 
       // Emit event when the dialog is closed
       const onClosed = () => {
+        dialog.value = false;
         emit('closed');
       };
   
@@ -153,22 +154,13 @@
         }
     };
 
-    // const fetchUserProducts = async (id) => {
-    //     try {
-    //         const response = await axiosInstance.get(`/products/get-by-buyer-id?buyer=${Number(id)}`);
-    //         products.value = response.data.items;
-    //     } catch (error) {
-    //         // console.error('Error fetching products:', error);
-    //     }
-    // };
-
     const fetchUserProducts = async (id) => {
         try {
             let response;
             if (props.userRole === 'SELLER') {
-                response = await axiosInstance.get(`/products/get-by-seller-id?sellerId=${Number(id)}`);
+                response = await axiosInstance.get(`/products/get-by-seller-id/${Number(id)}`);
             } else if (props.userRole === 'BUYER') {
-                response = await axiosInstance.get(`/products/get-by-buyer-id?buyerId=${Number(id)}`);
+                response = await axiosInstance.get(`/products/get-by-buyer-id/${Number(id)}`);
             }
             products.value = response.data.items;
         } catch (error) {
@@ -178,7 +170,7 @@
 
     const fetchUserReviews = async (id) => {
         try {
-            const response = await axiosInstance.get(`/reviews/get-by-reviewed-id?reviewedId=${Number(id)}`);
+            const response = await axiosInstance.get(`/reviews/get-by-reviewed-id/${Number(id)}`);
             reviews.value = response.data.items;
         } catch (error) {
             // console.error('Error fetching products:', error);

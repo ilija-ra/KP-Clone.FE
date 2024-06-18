@@ -46,7 +46,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#3F51B5" text @click="dialog = false">Close</v-btn>
+          <v-btn color="#3F51B5" text @click="onClosed">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -71,6 +71,7 @@
   
       // Emit event when the dialog is closed
       const onClosed = () => {
+        dialog.value = false;
         emit('closed');
       };
 

@@ -6,6 +6,7 @@ import Reviews from "@/views/Reviews.vue";
 import Reports from "@/views/Reports.vue";
 import Profile from "@/views/Profile.vue";
 import Users from "@/views/Users.vue";
+import ProductsByUser from "@/views/ProductsByUser.vue";
 import ReviewsByUser from "@/views/ReviewsByUser.vue";
 import ReviewsAboutMe from "@/views/ReviewsAboutMe.vue";
 import ReportCreate from "@/components/Reports/ReportCreate.vue";
@@ -35,6 +36,11 @@ const router = createRouter({
       path: "/users",
       component: Users,
       meta: { requiresAuth: true, roles: ["SELLER", "BUYER", "ADMINISTRATOR"] },
+    },
+    {
+      path: "/my-products",
+      component: ProductsByUser,
+      meta: { requiresAuth: true, roles: ["SELLER", "BUYER"] },
     },
     {
       path: "/my-reviews",

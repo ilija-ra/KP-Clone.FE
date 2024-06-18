@@ -61,7 +61,7 @@ export default {
     const products = ref([]);
     const categories = ref([]);
     const categoryNames = ref([]);
-    const selectedProductId = ref(null);;
+    const selectedProductId = ref(null);
     const search = ref(null);
     const minPrice = ref(null);
     const maxPrice = ref(null);

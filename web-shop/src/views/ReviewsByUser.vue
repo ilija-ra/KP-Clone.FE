@@ -5,7 +5,7 @@
                 <h1>MY REVIEWS</h1>
             </v-col>
             <v-col class="d-flex justify-end">
-                <v-btn prepend-icon="mdi-plus" @click="createReview()">New review</v-btn>
+                <v-btn prepend-icon="mdi-plus" color="#3F51B5" @click="createReview()">New review</v-btn>
             </v-col>
         </v-row>
         <v-data-table

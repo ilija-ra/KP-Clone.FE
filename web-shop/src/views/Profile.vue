@@ -147,7 +147,6 @@
   
       const updateProfile = async () => {
         try {
-            console.log("profile.value", profile.value);
           const response = await axiosInstance.put(`/users`, profile.value);
           initialProfile.value.password = profile.value.password
           initialProfile.value.username = profile.value.username

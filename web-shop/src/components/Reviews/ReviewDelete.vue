@@ -6,7 +6,7 @@
           <p>Are you sure you want to delete this review?</p>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="#3F51B5" text @click="dialog = false">Cancel</v-btn>
+          <v-btn color="#3F51B5" text @click="onClosed">Cancel</v-btn>
           <v-btn color="red darken-1" text @click="deleteReview">Delete</v-btn>
         </v-card-actions>
       </v-card>
@@ -47,6 +47,7 @@
       });
   
       const onClosed = () => {
+        dialog.value = false;
         emit('closed');
       };
 

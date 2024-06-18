@@ -31,6 +31,7 @@
       const userFullNames = ref([]);
       const store = useStore();
       const userId = computed(() => store.state.userId);
+      const role = computed(() => store.state.role);
       const report = ref({
         id: null,
         reason: null,
@@ -47,16 +48,23 @@
       ];
 
       onMounted(() => {
-        fetchUsers();
+        let userRoles = '';
+        if (role.value === 'BUYER') {
+          userRoles = 'sellers';
+        } else if (role.value === 'SELLER') {
+          userRoles = 'buyers';
+        }
+
+        fetchUsers(userRoles);
       });
 
-      const fetchUsers = async () => {
+      const fetchUsers = async (userRoles) => {
         try {
-          const response = await axiosInstance.get(`/users/options`);
+          const response = await axiosInstance.get(`/users/options/${userRoles}`);
           users.value = response.data.items.filter(x => x.id != userId.value);
           userFullNames.value = users.value.map(x => x.fullName);
         } catch (error) {
-          console.error('Error fetching product details:', error);
+          console.error('Error fetching users:', error);
         }
       };
   
@@ -69,7 +77,15 @@
             reporterId: userId.value
           }
 
-          const response = await axiosInstance.post(`/reports/create-for-seller`, payload);
+          let userRole;
+
+          if (role.value === 'BUYER') {
+            userRole = 'seller';
+          } else if (role.value === 'SELLER') {
+            userRole = 'buyer';
+          }
+
+          const response = await axiosInstance.post(`/reports/create-for-${userRole}`, payload);
 
           if (response.status === 201) {
             console.log('Report saved successfully');

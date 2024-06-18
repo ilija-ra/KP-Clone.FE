@@ -25,6 +25,7 @@
     setup() {
       const store = useStore();
       const userId = computed(() => store.state.userId);
+      const role = computed(() => store.state.role);
       const reviews = ref([]);
       const headers = [
         { text: 'ID', align: 'start', value: 'id' },
@@ -41,7 +42,13 @@
   
       const fetchReviewsAboutMe = async () => {
         try {
-          const response = await axiosInstance.get(`/reviews/my-purchase-reviews/${userId.value}`);
+          let helper = '';
+          if (role.value === 'BUYER') {
+            helper = 'purchase';
+          } else if (role.value === 'SELLER') {
+            helper = 'selling';
+        }
+          const response = await axiosInstance.get(`/reviews/my-${helper}-reviews/${userId.value}`);
           reviews.value = response.data.items;
         } catch (error) {
           // console.error('Error fetching products:', error);
