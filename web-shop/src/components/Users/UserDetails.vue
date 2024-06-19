@@ -126,22 +126,22 @@
       };
   
     const prouductHeaders = [
-        { text: 'ID', align: 'start', value: 'id' },
-        { text: 'Name', align: 'start', value: 'name' },
-        { text: 'Image', align: 'start', value: 'image' },
-        { text: 'Price', align: 'start', value: 'price' },
-        { text: 'Sale Type', align: 'start', value: 'saleType' },
-        { text: 'Publish Date', align: 'start', value: 'publishDate' },
-        // { text: 'Action', align: 'start', value: 'action' }
+        { title: 'ID', align: 'center', key: 'id' },
+        { title: 'Name', align: 'center', key: 'name' },
+        { title: 'Image', align: 'center', key: 'image' },
+        { title: 'Price', align: 'center', key: 'price' },
+        { title: 'Sale Type', align: 'center', key: 'saleType' },
+        { title: 'Publish Date', align: 'center', key: 'publishDate' },
+        // { text: 'Action', align: 'center', value: 'action' }
     ];
 
     const reviewHeaders = [
-        { text: 'ID', align: 'start', value: 'id' },
-        { text: 'Rate', align: 'start', value: 'rate' },
-        { text: 'Comment', align: 'start', value: 'comment' },
-        { text: 'Reviewer', align: 'start', value: 'reviewerName' },
-        { text: 'Review Date', align: 'start', value: 'reviewDate' },
-        // { text: 'Action', align: 'start', value: 'action' }
+        { title: 'ID', align: 'center', key: 'id' },
+        { title: 'Rate', align: 'center', key: 'rate' },
+        { title: 'Comment', align: 'center', key: 'comment' },
+        { title: 'Reviewer', align: 'center', key: 'reviewerName' },
+        { title: 'Review Date', align: 'center', key: 'reviewDate' },
+        // { text: 'Action', align: 'center', value: 'action' }
     ];
 
     const fetchUserDetails = async (id) => {
@@ -191,7 +191,9 @@
         user,
         products,
         reviews,
-        onClosed
+        onClosed,
+        prouductHeaders,
+        reviewHeaders
       };
     }
   };

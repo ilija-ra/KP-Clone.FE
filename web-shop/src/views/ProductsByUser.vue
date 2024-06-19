@@ -56,14 +56,21 @@
       const userId = computed(() => store.state.userId);
       const role = computed(() => store.state.role);
       const products = ref([]);
-      const headers = [
-        { text: 'ID', align: 'start', value: 'id' },
-        { text: 'Name', align: 'start', value: 'name' },
-        { text: 'Price', align: 'start', value: 'price' },
-        { text: 'Sale Type', align: 'start', value: 'saleType' },
-        { text: 'Publish Date', align: 'start', value: 'publishDate' },
-        { text: 'Action', align: 'start', value: 'action' }
-      ];
+      const headers = computed(() => {
+        const baseHeaders = [
+          { title: 'ID', align: 'center', key: 'id' },
+          { title: 'Name', align: 'center', key: 'name' },
+          { title: 'Price', align: 'center', key: 'price' },
+          { title: 'Sale Type', align: 'center', key: 'saleType' },
+          { title: 'Publish Date', align: 'center', key: 'publishDate' },
+        ];
+
+        if (role.value === 'SELLER') {
+          baseHeaders.push({ title: 'Actions', align: 'center', value: 'action' });
+        }
+
+        return baseHeaders;
+    });
   
       onMounted(() => {
         fetchMyProducts();

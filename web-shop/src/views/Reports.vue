@@ -38,12 +38,12 @@
       const reports = ref([]);
       const selectedReportId = ref(null);
       const headers = [
-        { text: 'ID', align: 'start', value: 'id' },
-        { text: 'Reason', align: 'start', value: 'reason' },
-        { text: 'Reported name', align: 'start', value: 'reportedName' },
-        { text: 'Report status', align: 'start', value: 'reportStatus' },
-        { text: 'Reporter Name', align: 'start', value: 'reporterName' },
-        { text: 'Action', align: 'start', value: 'action' }
+        { title: 'ID', align: 'center', key: 'id' },
+        { title: 'Reason', align: 'center', key: 'reason' },
+        { title: 'Reported name', align: 'center', key: 'reportedName' },
+        { title: 'Report status', align: 'center', key: 'reportStatus' },
+        { title: 'Reporter Name', align: 'center', key: 'reporterName' },
+        { title: 'Actions', align: 'center', value: 'action' }
       ];
       let acceptModalOpen = ref(false);
       let declineModalOpen = ref(false);

@@ -9,6 +9,7 @@
             </v-col>
         </v-row>
         <v-data-table
+            :headers="headers"
             :items="reviews"
             item-key="id"
             class="bottom-right">
@@ -35,12 +36,12 @@
       const userId = computed(() => store.state.userId);
       const reviews = ref([]);
       const headers = [
-        { text: 'ID', align: 'start', value: 'id' },
-        { text: 'Rate', align: 'start', value: 'rate' },
-        { text: 'Comment', align: 'start', value: 'comment' },
-        { text: 'Date', align: 'start', value: 'reviewDate' },
-        { text: 'Reviewed User', align: 'start', value: 'reviewedName' },
-        { text: 'Reviewer', align: 'start', value: 'reviewerName' },
+        { title: 'ID', align: 'center', key: 'id' },
+        { title: 'Rate', align: 'center', key: 'rate' },
+        { title: 'Comment', align: 'center', key: 'comment' },
+        { title: 'Date', align: 'center', key: 'reviewDate' },
+        { title: 'Reviewed User', align: 'center', key: 'reviewedName' },
+        { title: 'Reviewer', align: 'center', key: 'reviewerName' },
       ];
   
       onMounted(() => {

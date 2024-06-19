@@ -35,13 +35,13 @@
       const selectedUserId = ref(null);
       const selectedUserRole = ref(null);
       const headers = [
-        { text: 'ID', align: 'start', value: 'id' },
-        { text: 'First name', align: 'start', value: 'firstName' },
-        { text: 'Last name', align: 'start', value: 'lastName' },
-        { text: 'Username', align: 'start', value: 'username' },
-        { text: 'Email address', align: 'start', value: 'emailAddress' },
-        { text: 'Role', align: 'start', value: 'role' },
-        { text: 'Action', align: 'start', value: 'action' }
+        { title: 'ID', align: 'center', key: 'id' },
+        { title: 'First name', align: 'center', key: 'firstName' },
+        { title: 'Last name', align: 'center', key: 'lastName' },
+        { title: 'Username', align: 'center', key: 'username' },
+        { title: 'Email address', align: 'center', key: 'emailAddress' },
+        { title: 'Role', align: 'center', key: 'role' },
+        { title: 'Actions', align: 'center', value: 'action' }
       ];
       let detailsModalOpen = ref(false);
   

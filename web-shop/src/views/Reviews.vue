@@ -44,12 +44,12 @@
       const categoryNames = ref([]);
       const selectedReviewId = ref(null);
       const headers = [
-        { text: 'ID', align: 'start', value: 'id' },
-        { text: 'Rate', align: 'start', value: 'rate' },
-        { text: 'Comment', align: 'start', value: 'comment' },
-        { text: 'Reviewed User', align: 'start', value: 'reviewedName' },
-        { text: 'Reviewer', align: 'start', value: 'reviewerName' },
-        { text: 'Action', align: 'start', value: 'action' }
+        { title: 'ID', align: 'center', key: 'id' },
+        { title: 'Rate', align: 'center', key: 'rate' },
+        { title: 'Comment', align: 'center', key: 'comment' },
+        { title: 'Reviewed User', align: 'center', key: 'reviewedName' },
+        { title: 'Reviewer', align: 'center', key: 'reviewerName' },
+        { title: 'Actions', align: 'center', value: 'action' }
       ];
       let detailsModalOpen = ref(false);
       let editModalOpen = ref(false);

@@ -74,7 +74,6 @@ export default {
     let fixedPriceBuyModalOpen = ref(false);
     let auctionBuyModalOpen = ref(false);
     
-
     onMounted(() => {
       searchProducts();
       fetchCategories();
@@ -85,7 +84,11 @@ export default {
         const response = await axiosInstance.get('/products');
         products.value = response.data.items;
       } catch (error) {
-        // console.error('Error fetching products:', error);
+        Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
       }
     };
 
@@ -102,7 +105,11 @@ export default {
         const response = await axios.post('http://localhost:8080/api/products/search', payload);
         products.value = response.data.items;
       } catch (error) {
-        // console.error('Error fetching products:', error);
+        Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
       }
     };
 
@@ -112,20 +119,23 @@ export default {
         categories.value = response.data.items;
         categoryNames.value = categories.value.map(x => x.name);
       } catch (error) {
-        // console.error('Error fetching products:', error);
+        Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
       }
     };
 
     const headers = [
-      { text: 'ID', align: 'start', value: 'id' },
-      { text: 'Name', align: 'start', value: 'name' },
-      { text: 'Image', align: 'start', value: 'image' },
-      { text: 'Price', align: 'start', value: 'price' },
-      { text: 'Sale Type', align: 'start', value: 'saleType' },
-      { text: 'Publish Date', align: 'start', value: 'publishDate' },
-      { text: 'Seller Name', align: 'start', value: 'sellerName' },
-      { text: 'Seller Rate', align: 'start', value: 'sellerRate' },
-      { text: 'Action', align: 'start', value: 'action' }
+      { title: 'ID', align: 'center', key: 'id' },
+      { title: 'Name', align: 'center', key: 'name' },
+      { title: 'Price', align: 'center', key: 'price' },
+      { title: 'Sale Type', align: 'center', key: 'saleType' },
+      { title: 'Publish Date', align: 'center', key: 'publishDate' },
+      { title: 'Seller Name', align: 'center', key: 'sellerName' },
+      { title: 'Seller Rate', align: 'center', key: 'sellerRate' },
+      { title: 'Actions', align: 'center', value: 'action' }
     ];
 
     const showDetails = (id) => {
