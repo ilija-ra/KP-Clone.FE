@@ -26,7 +26,8 @@
     import axios from 'axios';
     import axiosInstance from '@/interceptors/axiosInterceptor.js';
     import { useStore } from "vuex";
-  
+  import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
     export default {
       name: 'ProductEdit',
       props: {
@@ -95,7 +96,11 @@
             const response = await axiosInstance.get(`/users/options/${userRoles}`);
             users.value = response.data.items.filter(x => x.id != userId.value);
           } catch (error) {
-            console.error('Error fetching users:', error);
+            Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+              toast.error(errorMessage, {
+                autoClose: 10000
+              })
+            });
           }
         };
 
@@ -105,7 +110,11 @@
             categories.value = response.data.items;
             categoryNames.value = categories.value.map(x => x.name);
             } catch (error) {
-                // console.error('Error fetching products:', error);
+              Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+              toast.error(errorMessage, {
+                autoClose: 10000
+              })
+            });
             }
         };
   
@@ -125,15 +134,23 @@
             const response = await axiosInstance.put(`/products`, payload);
   
             if (response.status === 204) {
-              console.log('Product saved successfully');
+              toast.success('Product saved successfully', {
+                autoClose: 10000
+              })
               dialog.value = false;
               emit('saved');
               
             } else {
-              console.error('Error saving product:', response.statusText);
+              toast.error(response.statusText, {
+              autoClose: 10000
+            })
             }
           } catch (error) {
-            console.error('Error saving changes:', error);
+            Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+              toast.error(errorMessage, {
+                autoClose: 10000
+              })
+            });
           }
         };
 

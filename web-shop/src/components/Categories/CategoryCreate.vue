@@ -21,7 +21,9 @@
     import axios from 'axios';
     import axiosInstance from '@/interceptors/axiosInterceptor.js';
     import { useStore } from "vuex";
-  
+  import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
     export default {
       name: 'ReviewCreate',
       setup(props, { emit }) {
@@ -53,14 +55,22 @@
             const response = await axiosInstance.post(`/categories`, payload);
   
             if (response.status === 201) {
-              console.log('Category saved successfully');
+              toast.success('Category saved successfully', {
+              autoClose: 10000
+            })
               emit('saved');
               dialog.value = false;
             } else {
-              console.error('Error saving product:', response.statusText);
+              toast.error(response.statusText, {
+              autoClose: 10000
+            })
             }
           } catch (error) {
-            console.error('Error saving changes:', error);
+            Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
           }
         };
   

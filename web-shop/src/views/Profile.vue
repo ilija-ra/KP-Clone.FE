@@ -36,8 +36,11 @@
 <script>
   import { ref, onMounted, computed } from 'vue';
   import axiosInstance from '@/interceptors/axiosInterceptor.js';
+  import axios from 'axios';
   import ConfirmPassword from '@/components/Profile/ConfirmPassword.vue';
   import { useStore } from "vuex";
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
   export default {
     name: 'EditProfile',
@@ -123,13 +126,17 @@
   
       const fetchProfileDetails = async () => {
         try {
-          const response = await axiosInstance.get(`/users/${userId.value}`);
+          const response = await axios.get(`http://localhost:8080/api/users/${userId.value}`);
           Object.assign(profile.value, response.data);
           profile.value.dateOfBirth = formatDateOfBirth(profile.value.dateOfBirth);
           initialProfile.value = { ...response.data };
           profile.value.confirmedPassword = response.data.password;
         } catch (error) {
-          console.error('Error fetching profile details:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
         }
       };
   
@@ -151,9 +158,15 @@
           initialProfile.value.password = profile.value.password
           initialProfile.value.username = profile.value.username
           initialProfile.value.emailAddress = profile.value.emailAddress
-          console.log('Profile updated successfully', response);
+          toast.success('Profile updated successfully', {
+              autoClose: 10000
+            })
         } catch (error) {
-          console.error('Error saving changes:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
         }
       };
   

@@ -16,7 +16,8 @@
   <script>
   import { ref, watch } from 'vue';
   import axiosInstance from '@/interceptors/axiosInterceptor.js';
-
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
   export default {
     name: 'ReportAcceptModal',
     props: {
@@ -32,10 +33,25 @@
       const acceptReport = async () => {
         try{
             const response = await axiosInstance.post(`/reports/accept/${Number(reportId)}`);
-            emit('accept');
-            dialog.value = false; // Close the modal
+
+            if (response.status === 204) {
+              toast.success('Report accepted successfully', {
+                autoClose: 10000
+              })
+              emit('accept');
+              dialog.value = false;
+            } else {
+              toast.error(response.statusText, {
+                autoClose: 10000
+              })
+            }
+
         } catch (error){
-            console.error('Error occured while accepting the report:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
         }
       };
   

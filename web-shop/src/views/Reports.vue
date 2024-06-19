@@ -2,7 +2,7 @@
     <div class="container">
         <v-row>
             <v-col cols="12">
-                <h1>REVIEWS</h1>
+                <h1>REPORTS</h1>
             </v-col>
         </v-row>
         <v-data-table

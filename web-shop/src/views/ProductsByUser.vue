@@ -35,6 +35,8 @@
   import CategoryCreate from '@/components/Categories/CategoryCreate.vue';
   import ProductCloseAuction from '@/components/Products/ProductCloseAuction.vue';
   import ProductEdit from '@/components/Products/ProductEdit.vue';
+  import { toast } from 'vue3-toastify'
+  import 'vue3-toastify/dist/index.css'
 
   export default {
     name: "MyProducts",
@@ -79,7 +81,11 @@
           const response = await axiosInstance.get(`/products/get-by-${helper}-id/${userId.value}`);
           products.value = response.data.items;
         } catch (error) {
-          // console.error('Error fetching products:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+            toast.error(errorMessage, {
+              autoClose: 10000
+            })
+          });
         }
       };
   

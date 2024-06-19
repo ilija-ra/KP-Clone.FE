@@ -1,46 +1,82 @@
-<!-- Login.vue -->
 <template>
-  <form @submit.prevent="submit">
-    <h1 class="h3 mb-3 fw-normal">Please log in!</h1>
-    <input v-model="data.username" type="text" class="form-control" placeholder="Username" required>
-    <input v-model="data.password" type="password" class="form-control" placeholder="Password" required>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Log in</button>
-  </form>
+  <div class="container">
+    <v-sheet class="mx-auto adjust-with-layout">
+    <v-container>
+      <v-row>
+        <v-col cols="12" class="text-center">
+          <h1>Log in</h1>
+          <p>Please, populate the form below in order to log in!</p>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-form ref="form" v-model="formValid" @submit.prevent="submit">
+            <v-text-field v-model="username" :rules="usernameRules" label="Username"></v-text-field>
+            <v-text-field v-model="password" :rules="passwordRules" label="Password" type="password"></v-text-field>
+            <v-btn class="mt-2" type="submit" block color="#3F51B5">Submit</v-btn>
+          </v-form>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-sheet>
+  </div>
 </template>
 
 <script lang="ts">
-import { reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRouter } from "vue-router";
 import axios from 'axios';
 import axiosInstance from '@/interceptors/axiosInterceptor.js'
 import { useStore } from "vuex";
+import { useValidationRules } from '@/validationRules/loginValidationRules'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 export default {
   name: "Login",
   setup() {
+    const {
+        usernameRules, 
+        passwordRules
+    } = useValidationRules();
     const data = reactive({
       username: '',
       password: ''
     });
+    const username = ref('');
+    const password = ref('');
     const router = useRouter();
     const store = useStore();
+    const formValid = ref(false);
 
     const submit = async () => {
       try {
-        const response = await axios.post('http://localhost:8080/api/auth/login', data, { withCredentials: true });
-        const token = response.data.token;
-        document.cookie = `jwt=${token}`;
+        if (formValid.value) {
+          const payload = {
+            username: username.value,
+            password: password.value
+          };
 
-        const user = await fetchUser();
+          const response = await axios.post('http://localhost:8080/api/auth/login', payload, { withCredentials: true });
+          const token = response.data.token;
+          document.cookie = `jwt=${token}`;
 
-        await store.dispatch('setAuth', true);
-        await store.dispatch('setRole', user.roles[0]);
-        await store.dispatch('setUserId', user.id);
-        await store.dispatch('setFullName', `${user.firstName} ${user.lastName}`);
-        await store.dispatch('setInitials', `${user.firstName[0]}${user.lastName[0]}`);
-        router.push('/');
+          const user = await fetchUser();
+
+          await store.dispatch('setAuth', true);
+          await store.dispatch('setRole', user.roles[0]);
+          await store.dispatch('setUserId', user.id);
+          await store.dispatch('setFullName', `${user.firstName} ${user.lastName}`);
+          await store.dispatch('setInitials', `${user.firstName[0]}${user.lastName[0]}`);
+          router.push('/');
+        }
+        
       } catch (error) {
-        console.error('Error:', error.response?.data?.errors || error.message);
+        Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
       }
     };
 
@@ -59,9 +95,22 @@ export default {
     };
 
     return {
+      formValid,
       data,
-      submit
+      submit,
+      username,
+      usernameRules,
+      password,
+      passwordRules
     };
   }
 };
 </script>
+
+<style scoped>
+  .adjust-with-layout {
+    margin-top: 64px;
+    margin-bottom: 50px;
+    width: 100% !important;
+  }
+</style>

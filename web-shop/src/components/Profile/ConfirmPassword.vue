@@ -27,7 +27,9 @@
     import { ref, watch, computed } from 'vue';
     import axiosInstance from '@/interceptors/axiosInterceptor.js';
     import { useStore } from "vuex";
-    
+    import { toast } from 'vue3-toastify'
+    import 'vue3-toastify/dist/index.css'
+
     export default {
         name: 'ConfirmPassword',
         props: {
@@ -58,7 +60,9 @@
                 const response = await axiosInstance.post('users/check-password', payload);
 
                 if (!response.data) {
-                    passwordMatchMessage.value = "You mismatched a current password! Try again.";
+                    toast.error('You mismatched a current password! Try again.', {
+                      autoClose: 10000
+                    });
                     return;
                 }
 

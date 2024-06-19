@@ -6,8 +6,6 @@
           <v-form ref="form">
             <v-text-field v-model="editedReview.rate" label="Rate" outlined type="number" :rules="rateRules"></v-text-field>
             <v-textarea v-model="editedReview.comment" label="Comment" outlined rows="3" max-rows="6" :rules="commentRules"></v-textarea>
-            <!-- <v-text-field v-model="editedReview.reviewedId" label="Reviewed Id" outlined type="number" :rules="reviewedIdRules"></v-text-field> -->
-            <!-- <v-text-field v-model="editedReview.reviewerId" label="Reviewer Id" outlined type="number" :rules="reviewerIdRules"></v-text-field> -->
             <v-select v-model="selectedReviewed" clearable label="Select reviewed" :items=userFullNames :rules="reviewedIdRules"></v-select>
             <v-select v-model="selectedReviewer" clearable label="Select reviewer" :items=userFullNames :rules="reviewerIdRules"></v-select>
           </v-form>
@@ -24,7 +22,8 @@
   <script>
   import { ref, watch, onMounted } from 'vue';
   import axiosInstance from '@/interceptors/axiosInterceptor.js';
-  
+  import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
   export default {
     name: 'EditReviewModal',
     props: {
@@ -83,7 +82,11 @@
 
           dialog.value = true;
         } catch (error) {
-          console.error('Error fetching review details:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
         }
       };
   
@@ -93,7 +96,11 @@
           users.value = response.data.items;
           userFullNames.value = users.value.map(x => x.fullName);
         } catch (error) {
-          console.error('Error fetching product details:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
         }
       };
 
@@ -119,10 +126,24 @@
           }
 
           const response = await axiosInstance.put(`/reviews`, payload);
-          dialog.value = false;
-          emit('saved');
+
+          if (response.status === 204) {
+            toast.success('Review saved successfully', {
+              autoClose: 10000
+            })
+            emit('saved');
+            dialog.value = false;
+          } else {
+            toast.error(response.statusText, {
+              autoClose: 10000
+            })
+          }
         } catch (error) {
-          console.error('Error saving changes:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
         }
       };
   

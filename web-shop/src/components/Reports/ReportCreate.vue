@@ -22,7 +22,8 @@
   import { ref, onMounted, computed } from 'vue';
   import axiosInstance from '@/interceptors/axiosInterceptor.js';
   import { useStore } from "vuex";
-
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
   export default {
     name: 'CreateReport',
     setup(props) {
@@ -64,7 +65,11 @@
           users.value = response.data.items.filter(x => x.id != userId.value);
           userFullNames.value = users.value.map(x => x.fullName);
         } catch (error) {
-          console.error('Error fetching users:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+            toast.error(errorMessage, {
+              autoClose: 10000
+            })
+          });
         }
       };
   
@@ -88,14 +93,22 @@
           const response = await axiosInstance.post(`/reports/create-for-${userRole}`, payload);
 
           if (response.status === 201) {
-            console.log('Report saved successfully');
+            toast.success('Report saved successfully', {
+              autoClose: 10000
+            })
             selectedReported.value = null;
             report.value.reason = null;
           } else {
-            console.error('Error saving review:', response.statusText);
+            toast.error(response.statusText, {
+              autoClose: 10000
+            })
           }
         } catch (error) {
-          console.error('Error saving changes:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+          toast.error(errorMessage, {
+            autoClose: 10000
+          })
+        });
         }
       };
   
