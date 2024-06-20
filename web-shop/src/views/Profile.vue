@@ -4,7 +4,8 @@
             <v-card>
                 <v-card-title>Edit Profile</v-card-title>
                 <v-card-text>
-                <v-form ref="form">
+                  <v-img :src="profile.profilePicture" class="mb-3"></v-img>
+                  <v-form ref="form" v-model="formValid" @submit.prevent="submit">
                     <v-text-field v-model="profile.firstName" label="First Name" outlined :rules="nameRules"></v-text-field>
                     <v-text-field v-model="profile.lastName" label="Last Name" outlined :rules="nameRules"></v-text-field>
                     <v-text-field v-model="profile.username" label="Username" outlined :rules="usernameRules"></v-text-field>
@@ -13,13 +14,13 @@
                     <v-text-field v-model="profile.password" label="Password" outlined type="password" :rules="passwordRules"></v-text-field>
                     <v-text-field v-model="profile.confirmedPassword" label="Confirmed Password" outlined type="password" :rules="confirmedPasswordRules"></v-text-field>
                     <v-text-field v-model="profile.dateOfBirth" label="Date of Birth" outlined type="date" :rules="dateRules"></v-text-field>
-                    <v-text-field v-model="profile.profilePicture" label="Profile Picture URL" outlined :rules="urlRules"></v-text-field>
                     <v-textarea v-model="profile.description" label="Description" outlined rows="3" max-rows="6" :rules="descriptionRules"></v-textarea>
-                </v-form>
+                    <v-file-input v-model="selectedNewProfilePicture" label="Upload image" prepend-icon="mdi-camera" variant="filled" outlined :rules="profilePictureRules"></v-file-input>
+                  </v-form>
                 </v-card-text>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="#3F51B5" text @click="saveChanges">Save</v-btn>
+                <v-btn color="#3F51B5" text @click="submit">Save</v-btn>
                 </v-card-actions>
             </v-card>
   
@@ -64,12 +65,13 @@ import 'vue3-toastify/dist/index.css'
         password: '',
         confirmedPassword: '',
         dateOfBirth: '',
-        profilePicture: '',
+        profilePicture: null,
         description: '',
         role: '',
         isBlocked: false
       });
-  
+      let selectedNewProfilePicture = ref(new File([], "", { type: "image/jpeg" }));
+      const formValid = ref(false);
       const confirmedPassword = ref('');
       const confirmPasswordDialog = ref(false);
       const initialProfile = ref(null);
@@ -103,9 +105,8 @@ import 'vue3-toastify/dist/index.css'
         (v) => !!v || 'Date of birth is required',
         (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) || 'Date must be in YYYY-MM-DD format'
       ];
-      const urlRules = [
-        (v) => !!v || 'Profile picture URL is required',
-        (v) => /^(ftp|http|https):\/\/[^ "]+$/.test(v) || 'URL must be valid'
+      const profilePictureRules = [
+        (v) => !!v || 'Profile picture is required'
       ];
       const descriptionRules = [
         (v) => !!v || 'Description is required',
@@ -131,6 +132,7 @@ import 'vue3-toastify/dist/index.css'
           profile.value.dateOfBirth = formatDateOfBirth(profile.value.dateOfBirth);
           initialProfile.value = { ...response.data };
           profile.value.confirmedPassword = response.data.password;
+          profile.value.profilePicture = `data:image/jpeg;base64,${profile.value.profilePicture}`;
         } catch (error) {
           Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
           toast.error(errorMessage, {
@@ -140,7 +142,7 @@ import 'vue3-toastify/dist/index.css'
         }
       };
   
-      const saveChanges = async () => {
+      const submit = async () => {
         if (
           profile.value.emailAddress !== initialProfile.value.emailAddress ||
           profile.value.username !== initialProfile.value.username ||
@@ -151,16 +153,40 @@ import 'vue3-toastify/dist/index.css'
           await updateProfile();
         }
       };
-  
+
       const updateProfile = async () => {
         try {
-          const response = await axiosInstance.put(`/users`, profile.value);
-          initialProfile.value.password = profile.value.password
-          initialProfile.value.username = profile.value.username
-          initialProfile.value.emailAddress = profile.value.emailAddress
-          toast.success('Profile updated successfully', {
+          if (formValid.value) { 
+            const formData = new FormData();
+            formData.append('id', profile.value.id);
+            formData.append('firstName', profile.value.firstName);
+            formData.append('lastName', profile.value.lastName);
+            formData.append('username', profile.value.username);
+            formData.append('emailAddress', profile.value.emailAddress);
+            formData.append('phoneNumber', profile.value.phoneNumber);
+            formData.append('password', profile.value.password);
+            formData.append('confirmedPassword', profile.value.confirmedPassword);
+            formData.append('profilePicture', selectedNewProfilePicture.value);
+            formData.append('dateOfBirth', new Date(profile.value.dateOfBirth).toISOString().split('T')[0]);
+            formData.append('description', profile.value.description);
+            formData.append('role', profile.value.role);
+            formData.append('isBlocked', profile.value.isBlocked);
+
+            const response = await axiosInstance.put(`/users`, formData, {
+              headers: { 'content-type': 'multipart/form-data' },
+            });
+
+            initialProfile.value.password = profile.value.password
+            initialProfile.value.username = profile.value.username
+            initialProfile.value.emailAddress = profile.value.emailAddress
+            toast.success('Profile updated successfully', {
               autoClose: 10000
             })
+          } else {
+              toast.error('Form is not valid', {
+                autoClose: 10000
+            });
+          } 
         } catch (error) {
           Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
           toast.error(errorMessage, {
@@ -180,6 +206,7 @@ import 'vue3-toastify/dist/index.css'
   
       return {
         profile,
+        formValid,
         confirmedPassword,
         confirmPasswordDialog,
         nameRules,
@@ -189,11 +216,12 @@ import 'vue3-toastify/dist/index.css'
         passwordRules,
         confirmedPasswordRules,
         dateRules,
-        urlRules,
+        profilePictureRules,
         descriptionRules,
-        saveChanges,
+        submit,
         handlePasswordConfirmation,
-        handlePasswordCancellation
+        handlePasswordCancellation,
+        selectedNewProfilePicture
       };
     }
   };
