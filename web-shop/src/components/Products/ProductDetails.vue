@@ -79,6 +79,7 @@
         try {
           const response = await axiosInstance.get(`/products/${Number(id)}`);
           product.value = response.data;
+          product.value.image = `data:image/jpeg;base64,${product.value.image}`;
           dialog.value = true;
         } catch (error) {
           console.error('Error fetching product details:', error);

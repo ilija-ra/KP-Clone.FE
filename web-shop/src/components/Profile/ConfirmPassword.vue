@@ -27,6 +27,7 @@
     import { ref, watch, computed } from 'vue';
     import axiosInstance from '@/interceptors/axiosInterceptor.js';
     import { useStore } from "vuex";
+    import { useRouter } from 'vue-router';
     import { toast } from 'vue3-toastify'
     import 'vue3-toastify/dist/index.css'
 
@@ -43,6 +44,7 @@
             const currentPassword = ref('');
             const dialogVisible = ref(props.dialog);
             const store = useStore();
+            const router = useRouter();
             const userId = computed(() => store.state.userId);
             const passwordMatchMessage = ref('');
             
@@ -65,6 +67,13 @@
                     });
                     return;
                 }
+
+                await store.dispatch('setAuth', false);
+                await store.dispatch('setRole', null);
+                await store.dispatch('setUserId', null);
+                await store.dispatch('setFullName', null);
+                await store.dispatch('setInitials', null);
+                router.push('/login');
 
                 emit('confirmed', currentPassword.value);
                 emit('update:dialog', false);

@@ -12,3 +12,4 @@ export const MIN_PRICE_VALUE = 0.0;
 export const MAX_PRICE_VALUE = 1000000.0;
 export const RATE_MIN_VALUE = 1;
 export const RATE_MAX_VALUE = 5;
+export const PRICE_MIN_VALUE = 0.01;
