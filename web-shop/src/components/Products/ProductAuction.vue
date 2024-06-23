@@ -20,7 +20,8 @@
   import { ref, computed, watch } from 'vue';
   import { useStore } from 'vuex';
   import axiosInstance from '@/interceptors/axiosInterceptor.js';
-
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
   export default {
     name: 'AuctionBuyModal',
     props: {
@@ -53,7 +54,11 @@
             emit('auctionBuy');
             dialog.value = false;
         } catch (error){
-            console.error('Error occured while buying a product:', error);
+          Object.values(error?.response?.data?.errors)?.forEach(errorMessage => {
+              toast.error(errorMessage, {
+                autoClose: 10000
+              })
+            });
         }
       };
   

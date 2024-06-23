@@ -42,12 +42,12 @@
                 <v-list-item-subtitle v-html="user.dateOfBirth"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item>
+            <!-- <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>Profile Picture:</v-list-item-title>
                 <v-list-item-subtitle v-html="user.profilePicture"></v-list-item-subtitle>
               </v-list-item-content>
-            </v-list-item>
+            </v-list-item> -->
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>Description:</v-list-item-title>
@@ -128,7 +128,7 @@
     const prouductHeaders = [
         { title: 'ID', align: 'center', key: 'id' },
         { title: 'Name', align: 'center', key: 'name' },
-        { title: 'Image', align: 'center', key: 'image' },
+        // { title: 'Image', align: 'center', key: 'image' },
         { title: 'Price', align: 'center', key: 'price' },
         { title: 'Sale Type', align: 'center', key: 'saleType' },
         { title: 'Publish Date', align: 'center', key: 'publishDate' },
